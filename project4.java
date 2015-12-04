@@ -30,7 +30,7 @@ void setup() {
    t.bottom= height-50;
    t.middle= t.left + (t.right-t.left) / 2;
    t.horizon= (height/4)-20;
-   t.wall= false ;
+   t.wall= true ;
    
    f=new Bird();
    rt= new Rat();
@@ -73,8 +73,10 @@ void setup() {
 
 //// NEXT:  Draw ball, after moving and colliding.
 void draw() {
+ 
   background( 100,150,250 );
   drawClouds();
+ 
   t.tableDisplay();
   scene();
   action();
@@ -85,7 +87,7 @@ void draw() {
   buttons();
   frame +=1;
   showScore();
-  
+  drawGrass();
 }
 
 //// Table, buttons, etc.
@@ -140,7 +142,17 @@ void ring( Ball p, Ball q){
     ellipse(p.x,p.y,40,40);
   }
 }
-    
+    void drawGrass(){
+  int x = 0;
+  strokeWeight(2);
+  while (x <= width){
+   fill(0,200,0);
+   noStroke();
+   triangle(x,height,x+10,height-20,x+10,height);
+   triangle(x+10,height,x+15,height-25,x+20,height);
+    x +=15;
+  }
+}
 void ratCollision( Ball p, Rat q ) {
   if ( p.hit( q.x,q.y ) ) {
     p.dx=0;
@@ -168,16 +180,18 @@ void showScore(){
 void show() {
   for( int i=0; i<nb; i++) {
     b[i].show();
+    
   }
  /* for( int i=0; i<nh; i++) {
     h[i].buttonDisplay();}*/
 }
 
 void reset() {
-
+  for( int i=0; i<nb; i++) {
+   b[i].randomize();
    b[0].randomize();
    t.wall = true;
-   
+  }
 }
 //// ????
 void messages() {
@@ -189,6 +203,9 @@ void mousePressed() {
    two.buttonWall();
    three.buttonBird();
    four.buttonRat();
+   for( int i=0; i<nb; i++) {
+   b[i].clickBall();
+   }
  }
 
  ///showing the clouds
@@ -522,7 +539,7 @@ class Bird {
   }
    void bombDrop(){
     if (drop==true){
-       
+       rectMode(CORNER);
         noStroke();
         fill(105);
         rect(x,by-50,25,50);
